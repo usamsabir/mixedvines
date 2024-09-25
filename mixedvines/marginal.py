@@ -25,6 +25,7 @@ Marginal
 """
 from scipy.stats import rv_continuous, norm, gamma, poisson, binom, nbinom
 import numpy as np
+import re
 
 
 class Marginal:
@@ -59,6 +60,10 @@ class Marginal:
         Generate random variates.
     fit(samples, is_continuous)
         Fit a distribution to samples.
+    standardize(self, samples: np.ndarray)  -> np.ndarray:
+        standardizes the input samples based on the marginal distribution's mean and standard deviation.
+    match_sample_labels(self, labels: List[str], pattern:  str)  -> List[bool]:
+        this function takes labels of the samples and tell if the labels match the expected pattern or not.
     """
 
     def __init__(self, rv_mixed):
@@ -162,6 +167,27 @@ class Marginal:
             Array of samples.
         """
         return self.rv_mixed.rvs(size, random_state=random_state)
+
+    def standardize(self, samples: np.ndarray) -> np.ndarray:
+        """Standardizes the input samples based on the marginal distribution's mean and standard deviation.
+
+        Args:
+            samples (np.ndarray): Array of samples.
+        Returns:
+            np.ndarray: Array of standardized samples.
+        """
+        return (samples - self.rv_mixed.mean()) / self.rv_mixed.std()
+
+    def match_sample_labels(self, labels: list[str]) -> list[bool]:
+        """
+        This function takes labels of the samples and tells if the labels match the expected pattern or not.
+        Args:
+            labels (list[str]): list of labels
+        Returns:
+            list[bool]: list of booleans indicating whether each label matches the pattern.
+        """
+        pattern = r"^(?!.*(duplicate|test))(?=.*[A-Z])(?=.*\d)[A-Z]{2}\d{2}-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\d{2}-[a-z]{3}_[A-Z][a-z]+_(?=0\.0*[1-9]|[1-9])\d*(\.\d*)?_pH\d+(\.\d+)?$"
+        return [bool(re.match(pattern, label)) for label in labels]
 
     @staticmethod
     def fit(samples, is_continuous):

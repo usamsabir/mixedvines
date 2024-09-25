@@ -19,6 +19,8 @@
 import numpy as np
 from numpy.testing import assert_allclose
 from mixedvines.marginal import Marginal
+from scipy.stats import norm
+
 
 
 def test_marginal_fit():
