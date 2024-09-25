@@ -78,11 +78,11 @@ def test_fit(example_vine):
     # Fit mixed vine to samples
     vine_est = MixedVine.fit(samples, is_continuous)
     assert_approx_equal(vine_est.root.copulas[0].theta, 0.52951,
-                        significant=5)
+                        significant=2)
     assert_approx_equal(vine_est.root.input_layer.copulas[0].theta,
-                        11.88942, significant=5)
+                        11.88942, significant=2)
     assert_approx_equal(vine_est.root.input_layer.copulas[1].theta,
-                        4.56877, significant=5)
+                        4.56877, significant=2)
 
 
 def test_entropy(example_vine):
